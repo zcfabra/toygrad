@@ -2,15 +2,29 @@ import numpy as np
 
 
 
-
+"""
+Tensor Class (datatype defaults to float32)
+"""
 class Tensor():
     def __init__(self, array_like):
-        self.data = np.array(array_like)
-        self.shape = self.data.shape
-        self.type = self.data.dtype
-    
-    def shape(self):
-        return self.shape
+        if isinstance(array_like, list):
+            self.data = np.array(array_like, dtype=np.float32)
+        elif isinstance(array_like, np.ndarray):
+            self.data = array_like.astype(np.float32)
+
+
+    def __matmul__(self, other):
+        return self.matmul(other)
+    def matmul(self, other):
+        return self.data.__matmul__(other.data)
+    @property
+    def shape(self): return self.data.shape
+
+    @property
+    def type(self): return self.data.dtype
+    @property
+    def dtype(self):
+        return self.type
 
     def __add__(self, other):
         ret = self.data + other.data
@@ -28,21 +42,35 @@ class Tensor():
             self.data = self.data.astype(np.float64)
         else:
             raise Exception(f"Data size {size} not supported for floats") 
-        self.type = self.data.dtype
         return self
+    def to_int(self, size=32):
+        if size == 32:
+            self.data = self.data.astype(np.int32)
+        elif size == 64:
+            self.data = self.data.astype(np.int64)
+        elif size == 16:
+            self.data = self.data.astype(np.int16)
+        elif size == 8:
+            self.data = self.data.astype(np.int8)
+        return self
+
+
+
+    @classmethod 
+    def randn(cls, *dims, **kwargs): return cls(np.random.randn(*dims), **kwargs)
+    @classmethod
+    def ones(cls, *dims, **kwargs): return cls(np.ones(dims, dtype=np.float32), **kwargs)
+    @classmethod 
+    def zeros(cls, *dims, **kwargs): return cls(np.zeros(dims, dtype=np.float32), **kwargs)
+    @classmethod
+    def eye(cls, dims, **kwargs):
+        return cls(np.eye(dims, dtype=np.float32), **kwargs)
     
+a = Tensor.ones(10,30)
+b = Tensor.ones(30, 40)
 
-
-a = Tensor([0,1,2,3,4])
-print(a.type)
-b = a.to_float()
-print(b.type)
-c = a.to_float(16)
-print(c.type)
-
-
-a = Tensor([1,2,3,4,5])
-b = Tensor([[1, 2, 3, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5]])
-c = a + b 
+c = a @ b
 print(c.shape)
-print(c)
+
+d = Tensor.randn(10,10,20)
+print(d.shape)
