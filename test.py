@@ -7,7 +7,7 @@ import numpy as np
 """
 Tensor Class (datatype defaults to float32)
 """
-class Tensor():
+class T():
     def __init__(self, array_like):
         if isinstance(array_like, list):
             self.data = np.array(array_like, dtype=np.float32)
@@ -31,24 +31,24 @@ class Tensor():
         return self.type
 
     def __add__(self, other):
-        if isinstance(other, Tensor):
+        if isinstance(other, T):
             ret = self.data + other.data
         elif type(other) == "int" or type(other) == "float":
             ret = self.data + other
-        return Tensor(ret)
+        return T(ret)
     
     def __sub__(self,other):
         print(type(other))
-        if isinstance(other, Tensor):
+        if isinstance(other, T):
             ret = self.data - other.data
         elif type(other) == type(90) or type(other) == type(9.0):
             ret = self.data - other
-        return Tensor(ret)
+        return T(ret)
     
     def __mul__(self, other):
         if type(other) == type(1) or type(other) == type(1.0): self.data = self.data * other
         elif isinstance(other, np.ndarray): self.data =  self.data * other
-        elif isinstance(other, Tensor): self.data = self.data * other.data
+        elif isinstance(other, T): self.data = self.data * other.data
 
         return self
 
@@ -57,7 +57,7 @@ class Tensor():
             self.data = self.data / other
         elif isinstance(other, np.ndarray):
             self.data = self.data / other
-        elif isinstance(other, Tensor):
+        elif isinstance(other, T):
             self.data = self.data / other.data
         return self
     def __floordiv__(self,other):
@@ -91,9 +91,9 @@ class Tensor():
     @classmethod 
     def randn(cls, *dims, **kwargs): return cls(np.random.randn(*dims), **kwargs)
     @classmethod 
-    def ones_like(cls, array_like, **kwargs): return cls(np.ones_like(array_like.data if isinstance(array_like, Tensor) else array_like), **kwargs)
+    def ones_like(cls, array_like, **kwargs): return cls(np.ones_like(array_like.data if isinstance(array_like, T) else array_like), **kwargs)
     @classmethod
-    def zeros_like(cls, array_like, **kwargs): return cls(np.zeros_like(array_like if isinstance(array_like,Tensor) else array_like), **kwargs)
+    def zeros_like(cls, array_like, **kwargs): return cls(np.zeros_like(array_like if isinstance(array_like,T) else array_like), **kwargs)
     @classmethod
     def ones(cls, *dims, **kwargs): return cls(np.ones(dims, dtype=np.float32), **kwargs)
     @classmethod 
@@ -102,6 +102,6 @@ class Tensor():
     def eye(cls, dims, **kwargs):
         return cls(np.eye(dims, dtype=np.float32), **kwargs)
     
-a = Tensor.eye(10)
+a = T.eye(10)
 c = (a * 10 ) // 2
 print(c)
