@@ -12,6 +12,13 @@ class Tensor():
     def shape(self):
         return self.shape
 
+    def __add__(self, other):
+        ret = self.data + other.data
+        return Tensor(ret)
+
+    def __repr__(self):
+        return f"{self.data}"
+
     def to_float(self, size=32):
         if size == 16:
             self.data = self.data.astype(np.float16)
@@ -21,9 +28,9 @@ class Tensor():
             self.data = self.data.astype(np.float64)
         else:
             raise Exception(f"Data size {size} not supported for floats") 
-            return self
         self.type = self.data.dtype
         return self
+    
 
 
 a = Tensor([0,1,2,3,4])
@@ -32,3 +39,10 @@ b = a.to_float()
 print(b.type)
 c = a.to_float(16)
 print(c.type)
+
+
+a = Tensor([1,2,3,4,5])
+b = Tensor([[1, 2, 3, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5]])
+c = a + b 
+print(c.shape)
+print(c)
