@@ -1,9 +1,4 @@
 import numpy as np
-
-
-
-
-
 """
 Tensor Class (datatype defaults to float32)
 """
