@@ -1,5 +1,2 @@
 # toygrad
-How does autodiff work?
-
-
-A tensor library with autograd and hardware acceleration (eventually)
+Investigating how autodiff works. This will be a tensor library with auto-diff and hardware acceleration
