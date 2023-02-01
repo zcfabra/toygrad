@@ -2,6 +2,8 @@ import numpy as np
 
 
 
+
+
 """
 Tensor Class (datatype defaults to float32)
 """
@@ -11,15 +13,17 @@ class Tensor():
             self.data = np.array(array_like, dtype=np.float32)
         elif isinstance(array_like, np.ndarray):
             self.data = array_like.astype(np.float32)
-
-
+        self.grad = None
+    def dot(self,other):
+        self.data = np.dot(self.data, other.data)
+        return self
     def __matmul__(self, other):
         return self.matmul(other)
     def matmul(self, other):
-        return self.data.__matmul__(other.data)
+        self.data = self.data.__matmul__(other.data)
+        return self
     @property
     def shape(self): return self.data.shape
-
     @property
     def type(self): return self.data.dtype
     @property
@@ -27,9 +31,39 @@ class Tensor():
         return self.type
 
     def __add__(self, other):
-        ret = self.data + other.data
+        if isinstance(other, Tensor):
+            ret = self.data + other.data
+        elif type(other) == "int" or type(other) == "float":
+            ret = self.data + other
         return Tensor(ret)
+    
+    def __sub__(self,other):
+        print(type(other))
+        if isinstance(other, Tensor):
+            ret = self.data - other.data
+        elif type(other) == type(90) or type(other) == type(9.0):
+            ret = self.data - other
+        return Tensor(ret)
+    
+    def __mul__(self, other):
+        if type(other) == type(1) or type(other) == type(1.0): self.data = self.data * other
+        elif isinstance(other, np.ndarray): self.data =  self.data * other
+        elif isinstance(other, Tensor): self.data = self.data * other.data
 
+        return self
+
+    def __truediv__(self, other):
+        if type(other) == type(1) or type(other) == type(1.0):
+            self.data = self.data / other
+        elif isinstance(other, np.ndarray):
+            self.data = self.data / other
+        elif isinstance(other, Tensor):
+            self.data = self.data / other.data
+        return self
+    def __floordiv__(self,other):
+        return self.__truediv__(other).to_int()
+
+    
     def __repr__(self):
         return f"{self.data}"
 
@@ -54,10 +88,12 @@ class Tensor():
             self.data = self.data.astype(np.int8)
         return self
 
-
-
     @classmethod 
     def randn(cls, *dims, **kwargs): return cls(np.random.randn(*dims), **kwargs)
+    @classmethod 
+    def ones_like(cls, array_like, **kwargs): return cls(np.ones_like(array_like.data if isinstance(array_like, Tensor) else array_like), **kwargs)
+    @classmethod
+    def zeros_like(cls, array_like, **kwargs): return cls(np.zeros_like(array_like if isinstance(array_like,Tensor) else array_like), **kwargs)
     @classmethod
     def ones(cls, *dims, **kwargs): return cls(np.ones(dims, dtype=np.float32), **kwargs)
     @classmethod 
@@ -66,11 +102,6 @@ class Tensor():
     def eye(cls, dims, **kwargs):
         return cls(np.eye(dims, dtype=np.float32), **kwargs)
     
-a = Tensor.ones(10,30)
-b = Tensor.ones(30, 40)
-
-c = a @ b
-print(c.shape)
-
-d = Tensor.randn(10,10,20)
-print(d.shape)
+a = Tensor.eye(10)
+c = (a * 10 ) // 2
+print(c)
