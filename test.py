@@ -20,8 +20,15 @@ class T():
         return self
 
     def sum(self, *args):
-        self.data = self.data.sum(*args)
-        return self
+        return self.data.sum(*args)
+
+    def mean(self, *args):
+        return self.data.mean(*args)
+    def argmax(self, **kwargs):
+        return self.data.argmax(**kwargs)
+    def softmax(self):
+        return self.data.exp()/ np.sum(self.data.exp())
+
     @property
     def shape(self): return self.data.shape
     @property
