@@ -1,3 +1,4 @@
+
 import numpy as np
 """
 Tensor Class (datatype defaults to float32)
@@ -16,6 +17,10 @@ class T():
         return self.matmul(other)
     def matmul(self, other):
         self.data = self.data.__matmul__(other.data)
+        return self
+
+    def sum(self, *args):
+        self.data = self.data.sum(*args)
         return self
     @property
     def shape(self): return self.data.shape
@@ -97,6 +102,5 @@ class T():
     def eye(cls, dims, **kwargs):
         return cls(np.eye(dims, dtype=np.float32), **kwargs)
     
-a = T.eye(10)
-c = (a * 10 ) // 2
-print(c)
+a = T.ones(10,10)
+print(a.sum((1)))
